@@ -33,6 +33,15 @@ Modelo.prototype = {
     this.preguntaBorrada.notificar();
   },
 
+  /*editarPregunta: function(id) {
+    
+    this.preguntas.find(pregunta => pregunta.id = id).nombre = nombre;
+    this.preguntas.find(pregunta => pregunta.id = id).respuestas = respuestas;
+    this.guardar();
+
+    this.preguntaEditada.notificar();
+  },*/
+
   //se guardan las preguntas
   guardar: function(){
   },
