@@ -24,6 +24,8 @@ VistaAdministrador.prototype = {
   //lista
   inicializar: function() {
     //llamar a los metodos para reconstruir la lista, configurar botones y validar formularios
+    this.modelo.leer();
+
     this.reconstruirLista()
     this.configuracionDeBotones();
 
@@ -40,7 +42,7 @@ VistaAdministrador.prototype = {
     var titulo = interiorItem.find('h5');
     titulo.text(pregunta.textoPregunta);
     interiorItem.find('small').text(pregunta.cantidadPorRespuesta.map(function(resp){
-      return " " + resp;
+      return " " + resp.textoRespuesta;
     }));
     nuevoItem.html($('.d-flex').html());
 
@@ -68,12 +70,13 @@ VistaAdministrador.prototype = {
       $('[name="option[]"]').each(function() {
         //completar
         if (this.value != ""){
-          respuestas.push(this.value);
+          respuestas.push({textoRespuesta: this.value, cantidad: 0});
         }
       })
       contexto.limpiarFormulario();
       contexto.controlador.agregarPregunta(value, respuestas);
     });
+
     //asociar el resto de los botones a eventos
     e.botonBorrarPregunta.click(function(){
       var id = $('.list-group-item.active')[0].id;
@@ -84,9 +87,29 @@ VistaAdministrador.prototype = {
       var id = $('.list-group-item.active')[0].id;
       var pregunta = contexto.modelo.preguntas.filter(pregunta => pregunta.id == id);
       e.pregunta.val(pregunta[0].textoPregunta);
-      e.respuesta[0] = pregunta[0].cantidadPorRespuesta;
-            
+      $('[name="option[]"]').val(pregunta[0].cantidadPorRespuesta[0].textoRespuesta);
+ 
+      for (var n=1; n<=pregunta[0].cantidadPorRespuesta.length; n++){
+        var $template = $('#optionTemplate'),
+          $clone = $template
+            .clone()
+            .removeClass('hide')
+            .attr('id', "respuesta" + pregunta[0].cantidadPorRespuesta[n].textoRespuesta)
+            .insertBefore($template),
+          $option = $clone.find('[name="option[]"]')
+            .val(pregunta[0].cantidadPorRespuesta[n].textoRespuesta);
+
+        // agregado de nuevo campo al formulario
+        $('#localStorageForm').formValidation('addField', $option);    
+      };
+      
       contexto.controlador.borrarPregunta(id);
+    });
+
+    e.borrarTodo.click(function(){
+      contexto.modelo.preguntas.forEach(function(pregunta) {
+        contexto.controlador.borrarPregunta(pregunta.id);
+      })
     });
   },
 
