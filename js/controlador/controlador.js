@@ -6,17 +6,13 @@ var Controlador = function(modelo) {
 };
 
 Controlador.prototype = {
-  agregarPregunta: function(pregunta, respuestas) {
-    this.modelo.agregarPregunta(pregunta, respuestas);
+  guardarPregunta: function(id, pregunta, respuestas) {
+    this.modelo.guardarPregunta(id, pregunta, respuestas);
   },
 
   borrarPregunta: function(id) {
     this.modelo.borrarPregunta(id);
   },
-
-  /*editarPregunta: function(id, pregunta, respuestas) {
-    this.modelo.editarPregunta(id, pregunta, respuestas);
-  },*/
 
   agregarVoto: function(nombrePregunta,respuestaSeleccionada) {
     this.modelo.agregarVoto(nombrePregunta,respuestaSeleccionada);

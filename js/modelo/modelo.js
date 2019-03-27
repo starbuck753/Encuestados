@@ -6,7 +6,7 @@ var Modelo = function() {
   this.ultimoId = 0;
 
   //inicializacion de eventos
-  this.preguntaAgregada = new Evento(this);
+  this.preguntaGuardada = new Evento(this);
   this.preguntaBorrada = new Evento(this);
   this.votoAgregado = new Evento(this);
 };
@@ -18,13 +18,24 @@ Modelo.prototype = {
   },
 
   //se agrega una pregunta dado un nombre y sus respuestas
-  agregarPregunta: function(nombre, respuestas) {
-    var id = this.obtenerUltimoId();
-    id++;
-    var nuevaPregunta = {'textoPregunta': nombre, 'id': id, 'cantidadPorRespuesta': respuestas};
-    this.preguntas.push(nuevaPregunta);
+  guardarPregunta: function(id, nombre, respuestas) {
+    var isNew = id == null ? true : false;
+
+    if(isNew){
+      id = this.obtenerUltimoId();
+      id++;
+    
+      var pregunta = {'textoPregunta': nombre, 'id': id, 'cantidadPorRespuesta': respuestas};
+      this.preguntas.push(pregunta);
+
+    } else {
+      var pregunta = this.preguntas.find(pregunta => pregunta.id = id);
+      pregunta.nombre = nombre;
+      pregunta.respuestas = respuestas;
+    }
+
     this.guardar();
-    this.preguntaAgregada.notificar();
+    this.preguntaGuardada.notificar();
   },
 
   borrarPregunta: function(id) {

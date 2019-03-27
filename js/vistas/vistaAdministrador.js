@@ -8,7 +8,7 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
   var contexto = this;
 
   // suscripción de observadores
-  this.modelo.preguntaAgregada.suscribir(function() {
+  this.modelo.preguntaGuardada.suscribir(function() {
     contexto.reconstruirLista();
   });
   this.modelo.preguntaBorrada.suscribir(function() {
@@ -64,6 +64,7 @@ VistaAdministrador.prototype = {
 
     //asociacion de eventos a boton
     e.botonAgregarPregunta.click(function() {
+      var id = e.pregunta.id;
       var value = e.pregunta.val();
       var respuestas = [];
 
@@ -85,25 +86,25 @@ VistaAdministrador.prototype = {
   
     e.botonEditarPregunta.click(function(){
       var id = $('.list-group-item.active')[0].id;
-      var pregunta = contexto.modelo.preguntas.filter(pregunta => pregunta.id == id);
-      e.pregunta.val(pregunta[0].textoPregunta);
-      $('[name="option[]"]').val(pregunta[0].cantidadPorRespuesta[0].textoRespuesta);
+      var preguntaSelec = contexto.modelo.preguntas.filter(pregunta => pregunta.id == id);
+      e.pregunta.val(preguntaSelec[0].textoPregunta);
+      e.pregunta.id = id;
+
+      $('[name="option[]"]').val(preguntaSelec[0].cantidadPorRespuesta[0].textoRespuesta);
  
-      for (var n=1; n<=pregunta[0].cantidadPorRespuesta.length; n++){
+      for (var n=1; n<preguntaSelec[0].cantidadPorRespuesta.length; n++){
         var $template = $('#optionTemplate'),
           $clone = $template
             .clone()
             .removeClass('hide')
-            .attr('id', "respuesta" + pregunta[0].cantidadPorRespuesta[n].textoRespuesta)
+            .attr('id', "respuesta" + preguntaSelec[0].cantidadPorRespuesta[n].textoRespuesta)
             .insertBefore($template),
           $option = $clone.find('[name="option[]"]')
-            .val(pregunta[0].cantidadPorRespuesta[n].textoRespuesta);
+            .val(preguntaSelec[0].cantidadPorRespuesta[n].textoRespuesta);
 
         // agregado de nuevo campo al formulario
-        $('#localStorageForm').formValidation('addField', $option);    
+        $('#localStorageForm').formValidation('addField', $option);
       };
-      
-      contexto.controlador.borrarPregunta(id);
     });
 
     e.borrarTodo.click(function(){
