@@ -29,9 +29,8 @@ Modelo.prototype = {
       this.preguntas.push(pregunta);
 
     } else {
-      var pregunta = this.preguntas.find(pregunta => pregunta.id = id);
-      pregunta.nombre = nombre;
-      pregunta.respuestas = respuestas;
+      this.preguntas.find(pregunta => pregunta.id = id).nombre = nombre;
+      this.preguntas.find(pregunta => pregunta.id = id).respuestas = respuestas;
     }
 
     this.guardar();

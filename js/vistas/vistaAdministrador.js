@@ -75,7 +75,7 @@ VistaAdministrador.prototype = {
         }
       })
       contexto.limpiarFormulario();
-      contexto.controlador.agregarPregunta(value, respuestas);
+      contexto.controlador.guardarPregunta(id, value, respuestas);
     });
 
     //asociar el resto de los botones a eventos
