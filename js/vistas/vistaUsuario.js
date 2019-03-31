@@ -20,7 +20,7 @@ VistaUsuario.prototype = {
   //muestra la lista por pantalla y agrega el manejo del boton agregar
   inicializar: function() {
 
-    this.modelo.leer();
+    //this.modelo.leer();
     this.reconstruirLista();
     var elementos = this.elementos;
     var contexto = this;

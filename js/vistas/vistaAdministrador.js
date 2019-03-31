@@ -24,7 +24,7 @@ VistaAdministrador.prototype = {
   //lista
   inicializar: function() {
     //llamar a los metodos para reconstruir la lista, configurar botones y validar formularios
-    this.modelo.leer();
+    //this.modelo.leer();
 
     this.reconstruirLista()
     this.configuracionDeBotones();
@@ -33,8 +33,6 @@ VistaAdministrador.prototype = {
   },
 
   construirElementoPregunta: function(pregunta){
-    var contexto = this;
-
     //asignar a nuevoitem un elemento li con clase "list-group-item", id "pregunta.id" y texto "pregunta.textoPregunta"
     var nuevoItem = $(`<li class='list-group-item' id='${pregunta.id}'></li>`);
     
@@ -64,7 +62,7 @@ VistaAdministrador.prototype = {
 
     //asociacion de eventos a boton
     e.botonAgregarPregunta.click(function() {
-      var id = e.pregunta.id;
+      var id = e.pregunta.attr('idPregunta');
       var value = e.pregunta.val();
       var respuestas = [];
 
@@ -87,16 +85,21 @@ VistaAdministrador.prototype = {
     e.botonEditarPregunta.click(function(){
       var id = $('.list-group-item.active')[0].id;
       var preguntaSelec = contexto.modelo.preguntas.filter(pregunta => pregunta.id == id);
-      e.pregunta.val(preguntaSelec[0].textoPregunta);
-      e.pregunta.id = id;
+      e.pregunta.val(preguntaSelec[0].textoPregunta)
+        .attr('idPregunta', id)
+        .parents('div').addClass('has-success');
 
-      $('[name="option[]"]').val(preguntaSelec[0].cantidadPorRespuesta[0].textoRespuesta);
+      e.respuesta.find('[name="option[]"]')
+        .val(preguntaSelec[0].cantidadPorRespuesta[0].textoRespuesta)
+        .parents('div').addClass('has-success');
  
+      var $template = $('#optionTemplate');
+
       for (var n=1; n<preguntaSelec[0].cantidadPorRespuesta.length; n++){
-        var $template = $('#optionTemplate'),
-          $clone = $template
+        var $clone = $template
             .clone()
             .removeClass('hide')
+            .addClass('has-success')
             .attr('id', "respuesta" + preguntaSelec[0].cantidadPorRespuesta[n].textoRespuesta)
             .insertBefore($template),
           $option = $clone.find('[name="option[]"]')
@@ -116,5 +119,8 @@ VistaAdministrador.prototype = {
 
   limpiarFormulario: function(){
     $('.form-group.answer.has-feedback.has-success').remove();
+    
+    var e = this.elementos;
+    e.pregunta.attr('idPregunta', "");
   },
 };
